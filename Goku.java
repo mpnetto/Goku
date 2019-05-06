@@ -10,10 +10,8 @@ import java.util.ArrayList;
 //
 public class Goku extends AdvancedRobot
 {
-	private boolean movingForward = true;
 
-	private byte radarDirection = 1;
-    final double PI = Math.PI;
+    final static double PI = Math.PI;
     public static double fieldWidth;
     public static double fieldHeight;
     public static double nearWall = 18;
@@ -22,26 +20,19 @@ public class Goku extends AdvancedRobot
 	
 	private EnemyBot enemy = new EnemyBot();
 
-    public static int BINS = 47;
-    public static double _surfStats[] = new double[BINS];
-    public Point2D.Double location;     // our bot's location
-    public Point2D.Double _enemyLocation;  // enemy bot's location
+    public Point2D.Double location; 
  
-    public static Rectangle2D.Double _fieldRect;
-    public static double WALL_STICK = 160;
+ 
+    public static Rectangle2D.Double field;
+    public static double WALL_STICK = 140;
 
 	public void run() {
 
         fieldWidth = 800.0;
         fieldHeight = 600.0;
 
-        _fieldRect= new java.awt.geom.Rectangle2D.Double(nearWall, nearWall, fieldWidth - (2 * nearWall), fieldHeight - (2 * nearWall));
+        field = new java.awt.geom.Rectangle2D.Double(nearWall, nearWall, fieldWidth - (2 * nearWall), fieldHeight - (2 * nearWall));
  
-        setAdjustGunForRobotTurn(true);
-        setAdjustRadarForGunTurn(true);
-	
-		int trigger = 10;
-		
 		setRoboColors();
 		setAdjustRadarForRobotTurn(true);
 		setAdjustGunForRobotTurn(true);
@@ -53,8 +44,6 @@ public class Goku extends AdvancedRobot
 		while(true) {
 			
             turnRadarRightRadians(Double.POSITIVE_INFINITY);
-
-            execute();
 		}
 	}
 
@@ -96,7 +85,6 @@ public class Goku extends AdvancedRobot
 
             goAngle = Math.atan2(location.x - bulletLocation.x, location.y - bulletLocation.y) + 1.25 *  sign(checkBullet(-1) - checkBullet(1));
         } catch (Exception ex) { }
-        System.out.println(goAngle);
         double angle;
         setTurnRightRadians(Math.tan(angle =  wallSmoothing(location, goAngle, bulletDirection) - getHeadingRadians()));
         setAhead(Math.cos(angle) * Double.POSITIVE_INFINITY);
@@ -104,7 +92,7 @@ public class Goku extends AdvancedRobot
  
         shoot();
 
-        goAngle = absBearing + Math.PI;
+        goAngle = absBearing + PI;
     }
 
 	public void onHitByBullet(HitByBulletEvent e) {
@@ -120,11 +108,11 @@ public class Goku extends AdvancedRobot
 
     public static void reverseDirection(AdvancedRobot robot, double goAngle) {
         double angle = Utils.normalRelativeAngle(goAngle - robot.getHeadingRadians());
-        if (Math.abs(angle) > (Math.PI/2)) {
+        if (Math.abs(angle) > (PI/2)) {
             if (angle < 0) {
-                robot.setTurnRightRadians(Math.PI + angle);
+                robot.setTurnRightRadians(PI + angle);
             } else {
-                robot.setTurnLeftRadians(Math.PI - angle);
+                robot.setTurnLeftRadians(PI - angle);
             }
             robot.setBack(100);
         } else {
@@ -138,7 +126,7 @@ public class Goku extends AdvancedRobot
     }
 
     private static double wallSmoothing(Point2D.Double botLocation, double angle, int orientation) {
-        while (!_fieldRect.contains(project(botLocation, angle, WALL_STICK))) {
+        while (!field.contains(project(botLocation, angle, WALL_STICK))) {
             angle += orientation*0.05;
         }
         return angle;

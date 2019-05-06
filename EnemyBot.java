@@ -183,14 +183,12 @@ public class EnemyBot extends Robot {
     public void updateBullets(AdvancedRobot robot) {
         Point2D.Double location = new Point2D.Double(robot.getX(), robot.getY()) ;
 
-        System.out.println( "BulletSize: "+bulletWave.size());
-
         for (int i = 0; i < bulletWave.size(); i++) {
             Bullet bullet = (Bullet)bulletWave.get(i);
  
             bullet.distanceTraveled = (robot.getTime() - bullet.time) * bullet.velocity;
             if (bullet.distanceTraveled > location.distance(bullet.location) + 50) {
-                bulletWave.remove(x);
+                bulletWave.remove(i);
                 i--;
             }
         }
