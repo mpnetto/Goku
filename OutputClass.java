@@ -14,6 +14,7 @@ public class OutputClass extends Class {
 	 */
 	private double Centroid = 0.0;
 	private ArrayList <Double> fitness = new ArrayList <Double>();
+	private boolean memoryFlag;
 	
 	/**
 	 * Constructor
@@ -24,9 +25,17 @@ public class OutputClass extends Class {
 	 * @param n
 	 */
 	public OutputClass (double a, double b, double c, double d, String n) {
-		
 		super( a,  b,  c,  d,  n);
+		this.memoryFlag = true;
 		this.Centroid = (c+b)/2;
+		// SLIDE: ele pega o centro de cada trapezio pra fazer o calculo
+	}
+
+	public OutputClass (double a, double b, double c, double d, String n, boolean memory) {
+		super( a,  b,  c,  d,  n);
+		this.memoryFlag = memory;
+		this.Centroid = (c+b)/2;
+		// SLIDE: ele pega o centro de cada trapezio pra fazer o calculo
 	}
 	
 	/**
@@ -36,6 +45,10 @@ public class OutputClass extends Class {
 	public void setFitness(double fit) {
 		
 		this.fitness.add(fit);
+	}
+
+	public void clearFitness() {
+		fitness = new ArrayList <Double>();
 	}
 	
 	/**
@@ -48,7 +61,12 @@ public class OutputClass extends Class {
 		for (double fit : fitness) {
 			
 			sum += fit*Centroid;
-			
+			//System.out.println("sum: " + fit + " * " + Centroid + " = " + fit*Centroid);
+		}
+
+		//System.out.println("peso: " + sum + " - qtd: " + fitness.size());
+		if (!memoryFlag) {
+			clearFitness();
 		}
 		
 		return sum;

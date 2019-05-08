@@ -8,6 +8,7 @@
     import Sayajin.Vector;
     import java.util.ArrayList;
     import Sayajin.FuzzySystem;
+    import Sayajin.FuzzySystemNoMemo;
     //
     public class Goku extends AdvancedRobot
     {
@@ -26,6 +27,7 @@
         private EnemyBot enemy = new EnemyBot();
         public Point2D.Double location; 
         FuzzySystem fs;    
+        FuzzySystemNoMemo fireSystem;    
     
     
         public static Rectangle2D.Double field;
@@ -42,7 +44,8 @@
 
             field = new java.awt.geom.Rectangle2D.Double(nearWall, nearWall, fieldWidth - (2 * nearWall), fieldHeight - (2 * nearWall));
             fs = new FuzzySystem(fieldWidth, fieldHeight);
-    
+            fireSystem = new FuzzySystemNoMemo(fieldWidth, fieldHeight);
+
             setRoboColors();
             setAdjustRadarForRobotTurn(true);
             setAdjustGunForRobotTurn(true);
@@ -62,7 +65,8 @@
             if (enemy.none())
                 return;
 
-            double firePower = Math.min(500 / enemy.getDistance(), 3);
+            double fire = fireSystem.setFire(enemy.getDistance(), enemy.getVelocity());
+            double firePower = Math.min(fire, 3); // 500 / enemy.getDistance(), 3);
             double bulletSpeed = 20 - firePower * 3;
             long time = (long)(enemy.getDistance() / bulletSpeed);
 
@@ -74,8 +78,6 @@
 
             if(getGunHeat() == 0)
                 setFire(firePower);
-                
-            // double fire = fs.setFire(enemy.getDistance(), enemy.getVelocity());
         }
 
         public void onScannedRobot(ScannedRobotEvent e) {
