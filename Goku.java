@@ -18,6 +18,7 @@
         public static double nearWall = 18;
         public static double goAngle;
         public static double lastLatVel;
+        public static double lastDistance;
 
 
         static final int BINS = 46;
@@ -31,7 +32,8 @@
         public static double WALL_STICK = 140;
 
         // Movement
-        private static double guessStats[][][] = new double[4][4][BINS+1];
+        private static double guessStats[][] = new double[16][BINS+1];
+
 
         public void run() {
 
@@ -73,7 +75,7 @@
             if(getGunHeat() == 0)
                 setFire(firePower);
                 
-            double fire = fs.setFire(enemy.getDistance(), enemy.getVelocity());
+            // double fire = fs.setFire(enemy.getDistance(), enemy.getVelocity());
         }
 
         public void onScannedRobot(ScannedRobotEvent e) {
@@ -93,6 +95,10 @@
                 Point2D.Double bulletLocation =  enemy.getBulletLocation();
                 bulletDirection = enemy.getBulletDirection();
 
+                System.out.println("Sign: " + sign(checkBullet(-1) - checkBullet(1)));
+                System.out.println("Danger 1: " + checkBullet(1));
+                System.out.println("Danger -1: " + checkBullet(-1));
+
                 goAngle = Math.atan2(location.x - bulletLocation.x, location.y - bulletLocation.y) + 1.25 *  sign(checkBullet(-1) - checkBullet(1));
             } catch (Exception ex) { }
             double angle;
@@ -103,22 +109,43 @@
             shoot();
 
             lastLatVel = lateralVelocity;
+            lastDistance = enemy.getDistance();
 
             goAngle = absBearing + PI;
         }
 
+        public void logHit( Point2D.Double targetLocation) {
+            int index = getFactorIndex(targetLocation);
+     
+            for (int i = 0; i <= BINS; i++) {
+                guessStats[(int)(Math.min((location.distance( enemy.getBulletLocation())+50)/200, 4))*3 +(int)((Math.abs(lastLatVel))/2)][i] += 1.0 / (Math.pow(index - i, 2) + 1);
+            }
+        }
+
         public double checkBullet( int direction ) {
        
-            // int index = getFactorIndex(surfWave,
-            //     predictColision(direction));
+            int index = getFactorIndex(predictColision(direction));
 
             Point2D.Double pos = predictColision(direction);
 
-            System.out.println("X e Y: " + pos.x + " - " + pos.y);
-     
-            // return _surfStats[index];
+            int guessIndex = (int) fs.getGuessIndex(pos.distance(location),lastLatVel);
 
-            return 0.1;
+            System.out.println("pos.distance(location): " + pos.distance(location));
+
+            System.out.println("guessIndex: " + guessIndex);
+
+            double[] currentStats = guessStats[guessIndex];
+     
+            return currentStats[index];
+
+            //return 0.1;
+        }
+
+        public int getFactorIndex(Point2D.Double targetLocation) {
+            double offsetAngle = (absoluteBearing(enemy.getBulletLocation(), targetLocation) - enemy.getBulletDirectAngle());
+            double guessFactor = Utils.normalRelativeAngle(offsetAngle) / maxEscapeAngle(enemy.getBulletVelocity()) * enemy.getBulletDirection();
+     
+            return (int)limit(0, (guessFactor * ((BINS - 1) / 2)) + ((BINS - 1) / 2), BINS - 1);
         }
 
         public Point2D.Double predictColision( int direction) {
@@ -152,9 +179,8 @@
      
                 tick++;
      
-                if (predictedPosition.distance(enemy.getBulletLocation()) < enemy.getBulletDistanceTraveled() + (tick * enemy.getBulletVelocity()) + enemy.getBulletVelocity()) {
+                if (predictedPosition.distance(enemy.getBulletLocation()) < enemy.getBulletDistanceTraveled() + (tick * enemy.getBulletVelocity()) + enemy.getBulletVelocity()) 
                     intercepted = true;
-                }
 
             }
      
@@ -163,7 +189,9 @@
 
         public void onHitByBullet(HitByBulletEvent e) {
 
-        // reverseDirection();
+            Point2D.Double hitBulletLocation = new Point2D.Double(e.getBullet().getX(), e.getBullet().getY());
+            logHit( hitBulletLocation);
+
         }
 
         
@@ -261,6 +289,10 @@
 
         public static double limit(double min, double value, double max) {
             return Math.max(min, Math.min(value, max));
+        }
+
+        public static double maxEscapeAngle(double velocity) {
+            return Math.asin(8.0/velocity);
         }
 
     

@@ -162,6 +162,10 @@ public class EnemyBot extends Robot {
         Bullet bullet = (Bullet) bulletWave.getFirst();
         return bullet.distanceTraveled;
     }
+    public double getBulletDirectAngle() {
+        Bullet bullet = (Bullet) bulletWave.getFirst();
+        return bullet.directAngle;
+    }
 
 
     class Bullet implements Serializable{

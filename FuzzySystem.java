@@ -16,12 +16,13 @@ public class FuzzySystem {
 	
 	FuzzyVariable distance;
 	FuzzyVariable speed;
+	OutputVariable guessFactor;
 	OutputVariable firepower;
 	Rule rule;
 	LinkedList<Rule> rules;
 	Map<String, FuzzyVariable> input;
 	Map<String, FuzzyVariable> output;
-	OutputVariable firePower;
+	
 	
 	public FuzzySystem(double w, double h) {
 		
@@ -53,18 +54,18 @@ public class FuzzySystem {
 
 		speed = new InputVariable(speedClasses, "speed");
 
-		Map<String, Class> firePowerClasses = new HashMap<String, Class>();
-		Class FBaixa = new OutputClass(1, 1, 1, 1.5, "F_Baixa");
-		Class FMedioBaixa = new OutputClass(1.2, 1.5, 1.5, 2, "F_MedioBaixa"); 
-		Class FMedia = new OutputClass(1.7, 2, 2, 2.5, "F_Media");
-		Class FAlta = new OutputClass(2.2, 3, 3, 3, "F_Alta");
+		Map<String, Class> guessFactorClass = new HashMap<String, Class>();
+		Class G_Baixa = new OutputClass(1, 2, 3, 4, "G_Baixa");
+		Class G_MedioBaixa = new OutputClass(3, 5, 7, 9, "G_MedioBaixa"); 
+		Class G_Media = new OutputClass(7, 8, 10, 11, "G_Media");
+		Class G_Alta = new OutputClass(12, 13, 15, 16, "G_Alta");
 
-		firePowerClasses.put(FBaixa.getName(), FBaixa);
-		firePowerClasses.put(FMedioBaixa.getName(), FMedioBaixa);
-		firePowerClasses.put(FMedia.getName(), FMedia);
-		firePowerClasses.put(FAlta.getName(), FAlta);	
+		guessFactorClass.put(G_Baixa.getName(), G_Baixa);
+		guessFactorClass.put(G_MedioBaixa.getName(), G_MedioBaixa);
+		guessFactorClass.put(G_Media.getName(), G_Media);
+		guessFactorClass.put(G_Alta.getName(), G_Alta);	
 
-		firePower = new OutputVariable(firePowerClasses, "firePower");
+		guessFactor = new OutputVariable(guessFactorClass, "guessFactor");
 
 		rules = new LinkedList<Rule>();
 
@@ -73,7 +74,7 @@ public class FuzzySystem {
 
 		inputHashmap.put("distance", "D_Baixa");
 		inputHashmap.put("speed", "V_Baixa");
-		outputHashmap.put("firePower", "F_Alta");
+		outputHashmap.put("guessFactor", "G_Baixa");
 
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -82,7 +83,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Baixa");
 		inputHashmap.put("speed", "V_MedioBaixa");
-		outputHashmap.put("firePower", "F_Media");
+		outputHashmap.put("guessFactor", "G_MedioBaixa");
 
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -91,7 +92,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Baixa");
 		inputHashmap.put("speed", "V_Media");
-		outputHashmap.put("firePower", "F_Media");
+		outputHashmap.put("guessFactor", "G_MedioBaixa");
 
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -100,7 +101,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Baixa");
 		inputHashmap.put("speed", "V_Alta");
-		outputHashmap.put("firePower", "F_Alta");
+		outputHashmap.put("guessFactor", "G_Media");
 
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -109,7 +110,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_MediaBaixa");
 		inputHashmap.put("speed", "V_Baixa");
-		outputHashmap.put("firePower", "F_Alta");
+		outputHashmap.put("guessFactor", "G_MedioBaixa");
 
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -118,7 +119,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_MediaBaixa");
 		inputHashmap.put("speed", "V_MedioBaixa");
-		outputHashmap.put("firePower", "F_Media");
+		outputHashmap.put("guessFactor", "G_MedioBaixa");
 
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -127,7 +128,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_MediaBaixa");
 		inputHashmap.put("speed", "V_Media");
-		outputHashmap.put("firePower", "F_Media");
+		outputHashmap.put("guessFactor", "G_Media");
 		
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -136,7 +137,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_MediaBaixa");
 		inputHashmap.put("speed", "V_Alta");
-		outputHashmap.put("firePower", "F_Media");
+		outputHashmap.put("guessFactor", "G_Media");
 		
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -145,7 +146,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Media");
 		inputHashmap.put("speed", "V_Baixa");
-		outputHashmap.put("firePower", "F_Media");
+		outputHashmap.put("guessFactor", "G_MedioBaixa");
 		
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -154,7 +155,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Media");
 		inputHashmap.put("speed", "V_MedioBaixa");
-		outputHashmap.put("firePower", "F_Media");
+		outputHashmap.put("guessFactor", "G_Media");
 		
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -163,7 +164,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Media");
 		inputHashmap.put("speed", "V_Media");
-		outputHashmap.put("firePower", "F_MedioBaixa");
+		outputHashmap.put("guessFactor", "G_Media");
 		
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -172,7 +173,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Media");
 		inputHashmap.put("speed", "V_Alta");
-		outputHashmap.put("firePower", "F_MedioBaixa");
+		outputHashmap.put("guessFactor", "G_Media");
 		
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -181,7 +182,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Alta");
 		inputHashmap.put("speed", "V_Baixa");
-		outputHashmap.put("firePower", "F_MedioBaixa");
+		outputHashmap.put("guessFactor", "G_Media");
 		
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -190,7 +191,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Alta");
 		inputHashmap.put("speed", "V_MedioBaixa");
-		outputHashmap.put("firePower", "F_MedioBaixa");
+		outputHashmap.put("guessFactor", "G_Media");
 		
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -199,7 +200,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Alta");
 		inputHashmap.put("speed", "V_Media");
-		outputHashmap.put("firePower", "F_Baixa");
+		outputHashmap.put("guessFactor", "G_Media");
 		
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -208,7 +209,7 @@ public class FuzzySystem {
 		outputHashmap = new HashMap<String, String>();
 		inputHashmap.put("distance", "D_Alta");
 		inputHashmap.put("speed", "V_Alta");
-		outputHashmap.put("firePower", "F_Baixa");
+		outputHashmap.put("guessFactor", "G_Alta");
 	
 		rule = new Rule(inputHashmap, outputHashmap);
 		rules.add(rule);
@@ -218,11 +219,11 @@ public class FuzzySystem {
 		input.put(speed.getName(), speed);
 		
 		output = new HashMap<String, FuzzyVariable>();
-		output.put(firePower.getName(), firePower);
+		output.put(guessFactor.getName(), guessFactor);
 	
 	}
 
-	public double setFire(double dist, double sp) {
+	public double getGuessIndex(double dist, double sp) {
 		
 		((InputVariable)distance).setValue(dist);
 		((InputVariable)speed).setValue(Math.abs(sp));
@@ -231,7 +232,7 @@ public class FuzzySystem {
 			den += r.applyRule(input, output);
 		}
 		
-		crisp = firePower.getOutput(den);
+		crisp = guessFactor.getOutput(den);
 		System.out.println("distancia do inimigo: "+ dist);
 		System.out.println("velocidade do inimigo: " + sp);
 		System.out.println("valor do disparo: " + crisp);
@@ -240,7 +241,7 @@ public class FuzzySystem {
 
 	public void setDistance(double h, double w) {
 		
-		this.maxDistance = Math.sqrt(w*w + h*h)/2;
+		this.maxDistance = Math.sqrt(w*w + h*h)/50;
 	}
 	
 	public double getDistance() {
