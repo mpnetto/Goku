@@ -20,14 +20,20 @@
         public static double goAngle;
         public static double lastLatVel;
         public static double lastDistance;
+        public static Intercept intercept;
 
 
         static final int BINS = 46;
+        public int c = 0;
+        public int cfac = 1;
         
         private EnemyBot enemy = new EnemyBot();
         public Point2D.Double location; 
         FuzzySystem fs;    
-        FuzzySystemNoMemo fireSystem;    
+        FuzzySystemNoMemo fireSystem;
+
+        public ArrayList sayanColors;
+
     
     
         public static Rectangle2D.Double field;
@@ -38,6 +44,22 @@
 
 
         public void run() {
+
+            sayanColors = new ArrayList();
+
+            Color color = new Color(243, 237, 163);
+            Color color2 = new Color(236, 218, 125);
+            Color color3 = new Color(230, 200, 95);
+            Color color4 = new Color(223, 182, 55);
+            Color color5 = new Color(217, 163, 26);
+
+            sayanColors.add(color);
+            sayanColors.add(color2);
+            sayanColors.add(color3);
+            sayanColors.add(color4);
+            sayanColors.add(color5);
+
+            intercept= new Intercept();
 
             fieldWidth = 800.0;
             fieldHeight = 600.0;
@@ -57,6 +79,8 @@
             while(true) {
                 
                 turnRadarRightRadians(Double.POSITIVE_INFINITY);
+
+                setAllColors(Color.YELLOW);
             }
         }
 
@@ -73,14 +97,52 @@
             double nextX = enemy.getFutureX(time);
             double nextY = enemy.getFutureY(time);
             double absDeg = absoluteBearing(getX(), getY(), nextX, nextY);
-            
+
+
+            intercept.calculate(  getX(),  getY(),  enemy.getX(), enemy.getY(),  enemy.getHeading(),  enemy.getVelocity(),  firePower,  0.0);
+
+            double turnAngle = normalizeBearing(intercept.bulletHeading_deg - getGunHeading());
+
             setTurnGunRight(normalizeBearing(absDeg - getGunHeading()));
 
+            // setTurnGunRight(turnAngle);
+
+           // if (getGunHeat() == 0 && Math.abs(turnAngle) <= intercept.angleThreshold) 
+               // if ( (intercept.impactPoint.getX() > 0) && (intercept.impactPoint.getX() < getBattleFieldWidth()) && (intercept.impactPoint.getY() > 0) && (intercept.impactPoint.getY() < getBattleFieldHeight())) 
+                  //    fire(firePower);  
+                    
+
             if(getGunHeat() == 0)
-                setFire(firePower);
+                 setFire(firePower);
+        }
+
+        public void goSuperSayan() {
+
+            if(getTime() % 4 == 0) {
+
+                c += cfac;
+                Color color = (Color) sayanColors.get(c);
+                setBodyColor(color);
+                setGunColor(color);
+                setRadarColor(color);
+                setBulletColor(color);
+                setScanColor(color);
+     
+                if (c >= 4)
+                    cfac = -1;
+                if (c <= 0)
+                    cfac = 1;
+            }
         }
 
         public void onScannedRobot(ScannedRobotEvent e) {
+
+
+            if(e.getTime() % 32 == 0) 
+                WALL_STICK = 120 + Math.random()*40;
+            if (getRoundNum() > 4)
+                goSuperSayan();
+            
 
             enemy.update(e, this);
             
@@ -263,7 +325,7 @@
         public void onWin(WinEvent e) {
             // Victory dance
             turnRight(36000);
-            setRadarColor(Color.YELLOW);
+            goSuperSayan();
         }
 
         private void setRoboColors() {

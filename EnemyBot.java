@@ -41,6 +41,15 @@ public class EnemyBot extends Robot {
         this.name = name;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+
     public double getBearing() {
         return bearing;
     }
