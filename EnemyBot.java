@@ -148,10 +148,21 @@ public class EnemyBot extends Robot {
         return bullet.location;
     }
 
-    public int getBulletDirectionn() {
+    public int getBulletDirection() {
         Bullet bullet = (Bullet) bulletWave.getFirst();
         return bullet.direction;
     }
+
+    public double getBulletVelocity() {
+        Bullet bullet = (Bullet) bulletWave.getFirst();
+        return bullet.velocity;
+    }
+
+    public double getBulletDistanceTraveled() {
+        Bullet bullet = (Bullet) bulletWave.getFirst();
+        return bullet.distanceTraveled;
+    }
+
 
     class Bullet implements Serializable{
         Point2D.Double location;
